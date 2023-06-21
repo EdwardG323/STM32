@@ -42,8 +42,24 @@
 //     gpio->MODER |= (mode & 3) << (n * 2);     // Set new bits    
 // }
 
+int main(void){
+    return 0;   // Do nothing for now
+}
+
 // Startup code
 __attribute__((naked, noreturn)) void _reset(void){
+    // memset .bss to zero, copy .data section to RAM
+    extern long _sbss, _ebss, _sdata, _edata, _sidata;
+
+    // Zero .bss section
+    for(long *src = &_sbss; src < &_ebss; src++)
+        *src = 0;
+
+    // Copy .data from flash to RAM
+    for(long *src = &_sdata, *dst = &_sidata; src < &_edata;)
+        *src++ = *dst++;
+
+    main();                 // call main
     for(;;) (void) 0;       // Infinite loop
 }
 
