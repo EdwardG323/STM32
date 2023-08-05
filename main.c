@@ -50,7 +50,7 @@ enum {
 
 static inline void gpio_set_mode(uint16_t pin, uint8_t mode){
     struct gpio *gpio = GPIO(PINBANK(pin));     // GPIO bank
-    int n = PINNO(pin);                     // Pin number
+    uint8_t n = PINNO(pin);                     // Pin number
     gpio->MODER &= ~(3U << (n * 2));          // Clear existing bits
     gpio->MODER |= (mode & 3) << (n * 2);     // Set new bits    
 }
@@ -91,17 +91,18 @@ struct rcc {
 #define RCC ((struct rcc* ) 0x40021000) 
 
 int main(void){
-    // uint16_t led = PIN('B', 7);
-    // // RCC->AHB2ENR1 |= BIT(PINBANK(led));
-    // RCC->AHBENR |= RCC_AHBENR_GPIOAEN_Msk;
-    // gpio_set_mode(led, GPIO_MODE_OUTPUT);
+    uint16_t led = PIN('B', 7);
+    // RCC->AHB2ENR1 |= BIT(PINBANK(led));
+    RCC->AHBENR |= RCC_AHBENR_GPIOAEN_Msk;
+    gpio_set_mode(led, GPIO_MODE_OUTPUT);
+    gpio_write(led, true);
 
-    // for(;;){
-    //     gpio_write(led, true);
-    //     spin(999999);
-    //     gpio_write(led, false);
-    //     spin(999999);
-    // }
+    /*for(;;){
+        gpio_write(led, true);
+        spin(999999);
+        gpio_write(led, false);
+        spin(999999);
+    }*/
     return 0;   // Do nothing for now
 }
 
