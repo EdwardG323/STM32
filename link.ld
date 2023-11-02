@@ -1,10 +1,11 @@
 ENTRY(_reset);
 MEMORY {
+	ccram(xrw)	: ORIGIN = 0x10000000, LENGTH = 16k
 	flash(rx)	: ORIGIN = 0x08000000, LENGTH = 512k
-	sram(rwx)	: ORIGIN = 0x20000000, LENGTH = 64k
+	ram(rwx)	: ORIGIN = 0x20000000, LENGTH = 64k
 }
 
-_estack    = ORIGIN(sram) + LENGTH(sram);
+_estack    = ORIGIN(ram) + LENGTH(ram);
 
 SECTIONS {
 	.vectors   : { KEEP(*(.vectors)) }    > flash
@@ -16,14 +17,14 @@ SECTIONS {
 		*(.first_data)
 		*(.data SORT(.data.*))
 		_edata = .;    /* .data section end */
-	} > sram AT > flash
+	} > ram AT > flash
 	_sidata = LOADADDR(.data);
 
 	.bss : {
 		_sbss = .;    /* .bss section start */
 		*(.bss SORT(.bss.*) COMMON)
 		_ebss = .;    /* .bss section end */
-	} > sram
+	} > ram
 
 	. = ALIGN(8);
 	_end = .;
