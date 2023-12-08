@@ -8,15 +8,29 @@ MEMORY {
 _estack    = ORIGIN(ram) + LENGTH(ram);
 
 SECTIONS {
-	.vectors   : { KEEP(*(.vectors)) }    > flash
-	.text      : { *(.text*) }            > flash
-	.rodata    : { *(.rodata*) }          > flash
+	.vectors   : { 
+		KEEP(*(.vectors)) 
+	} > flash
+
+	.text      : { 
+		*(.text*)
+
+		.= ALIGN(4) 
+	} > flash
+
+	.rodata    : { 
+		*(.rodata*)
+
+		. = ALIGN(4); 
+	} > flash
 
 	.data : {
 		_sdata = .;    /* .data section start */
 		*(.first_data)
 		*(.data SORT(.data.*))
 		_edata = .;    /* .data section end */
+
+		. =ALIGN(4)
 	} > ram AT > flash
 	_sidata = LOADADDR(.data);
 
@@ -24,8 +38,9 @@ SECTIONS {
 		_sbss = .;    /* .bss section start */
 		*(.bss SORT(.bss.*) COMMON)
 		_ebss = .;    /* .bss section end */
+
+		. = ALIGN(4);
 	} > ram
 
-	. = ALIGN(8);
 	_end = .;
 }
