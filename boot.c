@@ -1,4 +1,4 @@
-
+#include <inttypes.h>
 
 extern void _estack(void);
 
@@ -6,6 +6,10 @@ extern void _estack(void);
 #define SRAM_SIZE (32u * 1024u)
 #define SRAM_END (SRAM_START + SRAM_SIZE)
 #define STACK_PTR_INIT_ADD (SRAM_END)
+
+// OR
+
+// #define STACK_PTR_INIT_ADD &_estack
 
 #define ISR_VECTOR_SIZE 74+16+16
 
